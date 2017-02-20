@@ -15,6 +15,10 @@ import * as shopsActions from './flux/actions';
   }),
 )
 export default class Shops extends Component {
+  componentWillMount() {
+    this.props.shopsActions.fetchShops('https://opticheck-api.optimetriks.com:4430/api/visits');
+  }
+
   render() {
     return (
       <View style={{
@@ -23,7 +27,7 @@ export default class Shops extends Component {
         justifyContent: 'center',
         flexDirection: 'column',
       }}>
-        <Text>Shops</Text>
+        <Text>Shops {this.props.shops.length}</Text>
       </View>
     );
   }
