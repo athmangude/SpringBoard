@@ -5,7 +5,6 @@ export function addShop(shop) {
 }
 
 export function addShops(shops) {
-  console.log('ADDING SHOPS', shops);
   return { type: types.ADD_SHOPS, shops };
 }
 
@@ -37,7 +36,6 @@ export function fetchShops(url) {
         return response.json();
       })
       .then(data => {
-        console.log('shops received', data.length);
         dispatch(deleteShops());
         dispatch(addShops(data));
       })
