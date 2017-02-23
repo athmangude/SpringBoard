@@ -1,6 +1,6 @@
 import * as interviewActionTypes from '../constants';
 
-const initialState = []
+const initialState = [];
 
 const actionsMap = {
   [interviewActionTypes.ADD_INTERVIEW](state, action) {
