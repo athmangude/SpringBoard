@@ -1,7 +1,20 @@
 import React, { Component, PropTypes } from 'react';
-import { View, ScrollView, Text, StyleSheet, ToastAndroid, Platform, ActivityIndicator} from 'react-native';
-import { Toolbar, Button, ListItem, Subheader, ActionButton } from 'react-native-material-ui';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { View, ScrollView, Text, StyleSheet, ToastAndroid, Platform, ActivityIndicator } from 'react-native';
+import { Toolbar, Button, ListItem, Subheader, ActionButton, Dialog } from 'react-native-material-ui';
 
+import * as interviewsActions from '../flux/actions';
+
+@connect(
+  state => ({ // eslint-disable-line arrow-parens
+    ...state,
+  }),
+  dispatch => ({ // eslint-disable-line arrow-parens
+    interviewsActions: bindActionCreators(interviewsActions, dispatch),
+    dispatch,
+  }),
+)
 export default class Interview extends Component {
   static contextTypes = {
       uiTheme: PropTypes.object.isRequired,
@@ -20,12 +33,13 @@ export default class Interview extends Component {
     this.watchID = null;
 
     this.state = {
-      // polygonId: this.props.navigation.state.params.polygonId,
+      polygonId: this.props.navigation.state.params.polygonId,
       fetchingLocation: false,
       location: {
         initialPosition: null,
         lastPosition: null,
       },
+      showDialog: true,
       options: [
         {
           leftElement: 'face',
@@ -161,6 +175,18 @@ export default class Interview extends Component {
     ToastAndroid.show('Options have been reset', ToastAndroid.SHORT);
   }
 
+  onResetOptions() {
+    let resetOptions = this.state.options.map(option => {
+      option.selected = false;
+      return option;
+    });
+
+    this.setState({
+      options: resetOptions,
+      fetchingLocation: false,
+    });
+  }
+
   renderAddLocation() {
     if (this.state.fetchingLocation) {
       return (
@@ -192,16 +218,62 @@ export default class Interview extends Component {
     );
   }
 
+  renderDialog() {
+    if (this.state.showDialog) {
+      return (
+        <Dialog
+          style={{
+            container: {
+              // flex: 1,
+              alignSelf: 'center',
+              position: 'absolute',
+            }
+          }}
+        >
+          <Dialog.Title>
+            <Text>Enter a polygon ID</Text>
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text>Are you sure you want to submit this visit</Text>
+          </Dialog.Content>
+          {/* <Dialog.Actions>
+            <DialogDefaultActions
+               actions={['Confirm']}
+               onActionPress={this.onDialogActionPressed}
+            />
+          </Dialog.Actions> */}
+        </Dialog>
+      );
+    }
+  }
+
   onAddLocationPressed() {
-    this.setState({
-      fetchingLocation: true,
+    // this.setState({
+    //   fetchingLocation: true,
+    // });
+
+    // setTimeout(() => {
+    //   this.setState({
+    //     fetchingLocation: false,
+    //   })
+    // }, 2000);
+
+    let selectedItems = this.state.options.filter(option => {
+      if (option.selected) {
+        return true;
+      }
+      return false;
     });
 
-    setTimeout(() => {
-      this.setState({
-        fetchingLocation: false,
-      })
-    }, 2000);
+    let newInterview = {
+      location: this.state.location.lastPosition ? this.state.location.lastPosition : this.state.location.initialPosition,
+      timeStamp: new Date(),
+      shopsSells: selectedItems[0].primaryText,
+    }
+
+    this.props.interviewsActions.addInterview(newInterview);
+    ToastAndroid.show('Your interview was submitted', ToastAndroid.SHORT);
+    this.onResetOptions();
   }
 
   render () {
@@ -209,19 +281,37 @@ export default class Interview extends Component {
     const flattenPrimaryText = StyleSheet.flatten(listItem.primaryText);
 
     return (
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+        }}>
         <Toolbar
           leftElement="arrow-back"
           onLeftElementPress={this.goBack}
-          centerElement="Polygon #123"
+          centerElement={`Polygon ID: ${this.state.polygonId}`}
         />
-          <ScrollView style={{ flex: 1, }}>
-            <Subheader text="This shop sells ..." />
-            {this.renderListItems()}
-            {this.renderAddLocation()}
+        <ScrollView
+          style={{ flex: 1, }}
+        >
+          <Subheader text="This shop sells ..." />
+          {this.renderListItems()}
+          {this.renderAddLocation()}
         </ScrollView>
+        {/* <View
+          style={{
+            // flex: 1,
+            // alignItems: 'center',
+            // justifyContent: 'center',
+            alignSelf: 'center',
+            // position: 'absolute',
+
+          }}
+        >
+          {this.renderDialog()}
+        </View> */}
+        {/* {this.renderDialog()} */}
         <ActionButton
-          icon="repeat-one"
+          icon="repeat"
           onPress={this.onResetButtonPressed}
         />
       </View>
