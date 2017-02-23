@@ -143,7 +143,7 @@ export default class Interview extends Component {
               text="Add location"
               accent
               raised
-              icon="location-on"
+              icon="my-location"
               style={{
                 container: {
                   margin: 10,
