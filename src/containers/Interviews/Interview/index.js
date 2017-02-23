@@ -18,6 +18,7 @@ export default class Interview extends Component {
     super(props);
 
     this.state = {
+      // polygonId: this.props.navigation.state.params.polygonId,
       options: [
         {
           leftElement: 'face',

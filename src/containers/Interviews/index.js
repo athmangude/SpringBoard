@@ -72,7 +72,7 @@ export default class Shops extends Component {
         showDialog: false,
       });
 
-      this.props.navigation.navigate('Interview');
+      this.props.navigation.navigate('Interview', { polygonId: this.state.polygonId.original });
     }
   }
 
