@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, ScrollView, Text, StyleSheet, ToastAndroid, Platform } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, ToastAndroid, Platform, ActivityIndicator} from 'react-native';
 import { Toolbar, Button, ListItem, Subheader, ActionButton } from 'react-native-material-ui';
 
 export default class Interview extends Component {
@@ -19,6 +19,8 @@ export default class Interview extends Component {
 
     this.state = {
       // polygonId: this.props.navigation.state.params.polygonId,
+      fetchingLocation: true,
+      location: null,
       options: [
         {
           leftElement: 'face',
@@ -55,7 +57,9 @@ export default class Interview extends Component {
     this.renderListItems = this.renderListItems.bind(this);
     this.onListItemPressed = this.onListItemPressed.bind(this);
     this.addLocationButtonDisabledState = this.addLocationButtonDisabledState.bind(this);
-    this.onActionButtonPressed = this.onActionButtonPressed.bind(this);
+    this.onResetButtonPressed = this.onResetButtonPressed.bind(this);
+    this.renderAddLocation = this.renderAddLocation.bind(this);
+    this.onAddLocationPressed = this.onAddLocationPressed.bind(this);
   }
 
   goBack() {
@@ -107,13 +111,10 @@ export default class Interview extends Component {
       return false;
     });
 
-    if (selectedItems.length) {
-      return false;
-    }
-    return true;
+    return !selectedItems.length > 0;
   }
 
-  onActionButtonPressed() {
+  onResetButtonPressed() {
     let resetOptions = this.state.options.map(option => {
       option.selected = false;
       return option;
@@ -121,9 +122,53 @@ export default class Interview extends Component {
 
     this.setState({
       options: resetOptions,
+      fetchingLocation: false,
     });
 
     ToastAndroid.show('Options have been reset', ToastAndroid.SHORT);
+  }
+
+  renderAddLocation() {
+    if (this.state.fetchingLocation) {
+      return (
+        <ActivityIndicator
+          size={50}
+          color="red"
+          style={{
+            marginTop: 10,
+          }}
+        />
+      )
+    }
+
+    return (
+      <Button
+        text="Add location"
+        accent
+        raised
+        icon="my-location"
+        style={{
+          container: {
+            margin: 10,
+            height: 50,
+          }
+        }}
+        disabled={this.addLocationButtonDisabledState()}
+        onPress={this.onAddLocationPressed}
+      />
+    );
+  }
+
+  onAddLocationPressed() {
+    this.setState({
+      fetchingLocation: true,
+    });
+
+    setTimeout(() => {
+      this.setState({
+        fetchingLocation: false,
+      })
+    }, 2000);
   }
 
   render () {
@@ -140,23 +185,11 @@ export default class Interview extends Component {
           <ScrollView style={{ flex: 1, }}>
             <Subheader text="This shop sells ..." />
             {this.renderListItems()}
-            <Button
-              text="Add location"
-              accent
-              raised
-              icon="my-location"
-              style={{
-                container: {
-                  margin: 10,
-                  height: 50,
-                }
-              }}
-              disabled={this.addLocationButtonDisabledState()}
-            />
+            {this.renderAddLocation()}
         </ScrollView>
         <ActionButton
           icon="repeat-one"
-          onPress={this.onActionButtonPressed}
+          onPress={this.onResetButtonPressed}
         />
       </View>
     )
