@@ -8,8 +8,10 @@ import uiTheme from '../../uiTheme';
 const store = configureStore();
 
 import Interviews from '../Interviews';
+import Interview from '../Interviews/Interview';
 
 const AppNavigator = StackNavigator({
+  Interview: { screen: Interview },
   Interviews: { screen: Interviews },
 });
 
