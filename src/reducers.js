@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import shopsReducer from './containers/Shops/flux/reducers';
+import interviewsReducer from './containers/Interviews/flux/reducers';
 
 export default function createReducer() {
   return combineReducers({
-    shops: shopsReducer,
+    interviews: interviewsReducer,
   });
 }

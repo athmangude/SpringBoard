@@ -7,10 +7,10 @@ import uiTheme from '../../uiTheme';
 
 const store = configureStore();
 
-import Shops from '../Shops';
+import Interviews from '../Interviews';
 
 const AppNavigator = StackNavigator({
-  Shops: { screen: Shops },
+  Interviews: { screen: Interviews },
 });
 
 export default class App extends Component {
