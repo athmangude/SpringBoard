@@ -33,7 +33,7 @@ export default class Shops extends Component {
     super(props);
 
     this.state = {
-      showDialog: true,
+      showDialog: false,
       polygonId: {
         original: '',
         confirmation: '',
