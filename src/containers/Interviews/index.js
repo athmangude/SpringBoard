@@ -56,6 +56,13 @@ export default class Shops extends Component {
     })
   }
 
+  dialogActions() {
+    if (this.state.polygonId.original.length && (this.state.polygonId.original === this.state.polygonId.confirmation)) {
+      return ['Cancel', 'Proceed'];
+    }
+    return ['Cancel'];
+  }
+
   onDialogActionPressed(action) {
     if (action === 'Cancel') {
       this.setState({
@@ -69,7 +76,7 @@ export default class Shops extends Component {
   }
 
   onPolygonIdChanged(text, field) {
-    if (Number(text)) {
+    if (Number(text) || !text.length) {
       this.setState({
         polygonId: Object.assign({}, this.state.polygonId, {
           [field]: text,
@@ -84,6 +91,7 @@ export default class Shops extends Component {
 
   renderDialog() {
     let { height, width } = Dimensions.get('window');
+
     if (this.state.showDialog) {
       return (
         <Dialog>
@@ -109,7 +117,7 @@ export default class Shops extends Component {
           </Dialog.Content>
           <Dialog.Actions>
             <DialogDefaultActions
-               actions={['Cancel', 'Proceed']}
+               actions={this.dialogActions()}
                onActionPress={this.onDialogActionPressed}
             />
           </Dialog.Actions>
