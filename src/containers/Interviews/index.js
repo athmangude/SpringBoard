@@ -34,7 +34,7 @@ export default class Shops extends Component {
   }
 
   componentWillMount() {
-    this.props.shopsActions.fetchShops('https://opticheck-api.optimetriks.com:4430/api/visits?limit=15000&created_at%5BfromDate%5D=2017-02-21&created_at%5BtoDate%5D=2017-02-21&imeis%5B%5D=359758072284755');
+    this.props.shopsActions.fetchInterviews('https://opticheck-api.optimetriks.com:4430/api/visits?limit=15000&created_at%5BfromDate%5D=2017-02-21&created_at%5BtoDate%5D=2017-02-21&imeis%5B%5D=359758072284755');
   }
 
   onActionButtonPressed() {
