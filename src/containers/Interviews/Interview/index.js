@@ -17,10 +17,15 @@ export default class Interview extends Component {
   constructor(props) {
     super(props);
 
+    this.watchID = null;
+
     this.state = {
       // polygonId: this.props.navigation.state.params.polygonId,
-      fetchingLocation: true,
-      location: null,
+      fetchingLocation: false,
+      location: {
+        initialPosition: null,
+        lastPosition: null,
+      },
       options: [
         {
           leftElement: 'face',
@@ -60,6 +65,34 @@ export default class Interview extends Component {
     this.onResetButtonPressed = this.onResetButtonPressed.bind(this);
     this.renderAddLocation = this.renderAddLocation.bind(this);
     this.onAddLocationPressed = this.onAddLocationPressed.bind(this);
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        var initialPosition = position;
+        this.setState({
+          location: Object.assign({}, this.state.location, {
+            initialPosition: initialPosition,
+          }),
+        });
+      },
+      (error) => console.log(JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      var lastPosition = position;
+      this.setState({
+        location: Object.assign({}, this.state.location, {
+          lastPosition: lastPosition,
+        }),
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   goBack() {
