@@ -11,8 +11,8 @@ import Interviews from '../Interviews';
 import Interview from '../Interviews/Interview';
 
 const AppNavigator = StackNavigator({
-  Interview: { screen: Interview },
   Interviews: { screen: Interviews },
+  Interview: { screen: Interview },
 });
 
 export default class App extends Component {
