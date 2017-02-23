@@ -50,10 +50,9 @@ export default class Shops extends Component {
   }
 
   onActionButtonPressed() {
-    console.log('pressed', this.props);
     this.setState({
       showDialog: true,
-    })
+    });
   }
 
   dialogActions() {
@@ -72,6 +71,8 @@ export default class Shops extends Component {
       this.setState({
         showDialog: false,
       });
+
+      this.props.navigation.navigate('Interview');
     }
   }
 
