@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { View, ScrollView, Text, StyleSheet, ToastAndroid, Platform } from 'react-native';
-import { Toolbar, Button, ListItem, Subheader } from 'react-native-material-ui';
+import { Toolbar, Button, ListItem, Subheader, ActionButton } from 'react-native-material-ui';
 
 export default class Interview extends Component {
   static contextTypes = {
@@ -54,6 +54,7 @@ export default class Interview extends Component {
     this.renderListItems = this.renderListItems.bind(this);
     this.onListItemPressed = this.onListItemPressed.bind(this);
     this.addLocationButtonDisabledState = this.addLocationButtonDisabledState.bind(this);
+    this.onActionButtonPressed = this.onActionButtonPressed.bind(this);
   }
 
   goBack() {
@@ -61,8 +62,6 @@ export default class Interview extends Component {
   }
 
   onListItemPressed(key, item) {
-    ToastAndroid.show(`You selected: ${item.primaryText}`, ToastAndroid.SHORT);
-
     let updatedOptions = this.state.options.map((option, i) => {
       if (i === key) {
         option.selected = true;
@@ -108,9 +107,22 @@ export default class Interview extends Component {
     });
 
     if (selectedItems.length) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
+  }
+
+  onActionButtonPressed() {
+    let resetOptions = this.state.options.map(option => {
+      option.selected = false;
+      return option;
+    });
+
+    this.setState({
+      options: resetOptions,
+    });
+
+    ToastAndroid.show('Options have been reset', ToastAndroid.SHORT);
   }
 
   render () {
@@ -141,6 +153,10 @@ export default class Interview extends Component {
               disabled={this.addLocationButtonDisabledState()}
             />
         </ScrollView>
+        <ActionButton
+          icon="repeat-one"
+          onPress={this.onActionButtonPressed}
+        />
       </View>
     )
   }
